@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>rpi-temp</title>
+  <link rel="stylesheet" href="bower_components/angular-chart.js/dist/angular-chart.css">
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+
+  <script src="bower_components/jquery/dist/jquery.js"></script>
+  <script src="bower_components/Chart.js/Chart.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/angular-chart.js/dist/angular-chart.js"></script>
+</head>
+<body ng-app="rpiTemp">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12" ng-controller="tempCtrl">
+        <h4>Current temperature
+          <small>{{currentTemp}}&deg;C</small>
+        </h4>
+        <canvas id="tempChart" class="chart chart-line"
+                options="options" data="data" labels="labels" series="series">
+        </canvas>
+      </div>
+    </div>
+
+  </div>
+  <script src="app/app.js"></script>
+  <script src="app/socket/socket.factory.js"></script>
+  <script src="app/temperature/temperature.controller.js"></script>
+</body>
+</html>

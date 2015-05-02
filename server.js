@@ -9,6 +9,12 @@
       server = require('http').createServer(app),
       io = require('socket.io')(server);
 
+  app.use(express.static('public'));
+
+  app.get('/', function (req, res) {
+    res.sendfile('public/index.html');
+  });
+
   server.listen(3000, function () {
     console.log('Server is listening.');
   });
