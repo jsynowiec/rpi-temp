@@ -1,40 +1,38 @@
-(function () {
-  'use strict';
+import {SENSOR_TYPES, Sensor} from './modules/ds18x20';
+import express from 'express';
+import http from 'http';
+import io from 'socket-io';
 
-  var ds18x20 = require('./modules/ds18x20'),
-      ds18b20 = new ds18x20.Sensor(ds18x20.THERM_SENSOR_DS18B20, '0000062f17e2');
+let ds18b20 = new Sensor(SENSOR_TYPES.THERM_SENSOR_DS18B20, '0000062f17e2');
 
-  var express = require('express'),
-      app = express(),
-      server = require('http').createServer(app),
-      io = require('socket.io')(server);
+let app = express(),
+  server = http.createServer(app),
+  socket = io(server);
 
-  app.use(express.static('public'));
+app.use(express.static('public'));
 
-  app.get('/', function (req, res) {
-    res.sendfile('public/index.html');
-  });
+app.get('/', (req, res) => {
+  res.sendfile('public/index.html');
+});
 
-  server.listen(3000, function () {
-    console.log('Server is listening.');
-  });
+server.listen(3000, () => {
+  console.log('Server is listening.');
+});
 
-  io.on('connection', function () {
-    console.log('Client connected');
-  });
+socket.on('connection', () => {
+  console.log('Client connected');
+});
 
-  setInterval(function () {
-    ds18b20.getTemp()
-        .then(function (temp) {
-                  io.emit('temperature:readout', {
-                    timestamp: Math.floor(Date.now() / 1000),
-                    sensor: {
-                      type: ds18b20.getType(),
-                      id: ds18b20.getId()
-                    },
-                    value: temp
-                  });
-              });
-  }, 1000);
-
-})();
+setInterval(() => {
+  ds18b20.getTemp()
+      .then((temp) => {
+        socket.emit('temperature:readout', {
+          timestamp: Math.floor(Date.now() / 1000),
+          sensor: {
+            type: ds18b20.getType(),
+            id: ds18b20.getId()
+          },
+          value: temp
+        });
+      });
+}, 1000);
